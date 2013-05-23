@@ -142,13 +142,13 @@ def load_flann_library():
 
     root_dir = os.path.abspath(os.path.dirname(__file__))
     
-    libdir = '../lib/'+sys.platform
+    libnames = ['libflann.so']
+    libdir = os.path.normpath('../lib/'+sys.platform)
     if sys.platform == 'win32':
-        libnames = ['flann.dll']
+        libnames = ['flann.dll', 'libflann.dll']
     elif sys.platform == 'darwin':
         libnames = ['libflann.dylib']
-    else:
-        libnames = ['libflann.so']
+
     while root_dir!=None:
         for libname in libnames:
             try:
@@ -182,7 +182,6 @@ def load_flann_library():
 
 flannlib = load_flann_library()
 if flannlib == None:
-    print 'Cannot load dynamic library. Did you compile FLANN?'
     raise ImportError('Cannot load dynamic library. Did you compile FLANN?')
 
 class FlannLib: pass
