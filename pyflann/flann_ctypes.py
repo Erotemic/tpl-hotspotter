@@ -164,8 +164,8 @@ def load_flann_library():
                 print "Attempting to open FLANN library located at: ", try_path
                 flannlib = cdll[try_path]
                 return flannlib
-             except Exception:
-                 pass
+            except Exception:
+                pass
         tmp = os.path.dirname(root_dir)
         if tmp == root_dir:
             root_dir = None
