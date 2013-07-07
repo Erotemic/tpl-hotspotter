@@ -31,7 +31,7 @@ from pylab import find
 from scipy.misc import comb
 from scipy.ndimage import convolve
 from scipy.signal import gaussian
-from skimage.color import rgb2gray
+from PIL import Image
 import numpy as np
 import sys
 
@@ -92,16 +92,17 @@ def maxFilter(inImg, w):
 # These take a long time: (chip, 1.6, 10, 7, 0)
 # These are almost as good: (chip, 1.6, 200, 7, 0)
 # SigmaR is the real time sucker. The bigger it is the faster it goes
-def shiftableBF(inImg, sigmaS=1.6, sigmaR=200, w=7, tol=0):
+def shiftableBF(pil_img, sigmaS=1.6, sigmaR=200, w=7, tol=0):
     '''
     inImg - expects a grayscale numpy array with dtype=uint8
     np.asarray(Image.open(imname).convert('L'))
     '''
+    inImg = np.asarray(pil_img.convert('L'))
     inMax = inImg.max
     nChan = 1 if len(inImg.shape) == 2 else inImg.shape[2]
     inTyp = inImg.dtype
     if nChan == 4: inImg = inImg[:,:,0:3]  # remove alpha
-    if nChan  > 1: inImg = rgb2gray(inImg) # remove color
+    #if nChan  > 1: inImg = rgb2gray(inImg) # remove color
     if inMax <= 1: inImg *= 255.           # force to range 0,255
 
     if w % 2 == 0: 
@@ -197,5 +198,5 @@ def shiftableBF(inImg, sigmaS=1.6, sigmaR=200, w=7, tol=0):
     if outImg.dtype != inTyp:
         outImg = np.array(outImg,dtype=inTyp)
 
-    return outImg
+    return Image.fromarray(outImg)
 
